@@ -51,3 +51,25 @@ However, if the `BUFFER_SIZE` is 100, a single call to the `read` function would
 
 ## ¤ Static Variables in C ¤
 Static variable can be used to maintain the state of reading lines across multiple function calls. This is commonly used in functions that read input until a newline character ('\n') is encountered or until a specified delimiter is found.
+## ¤ A Function Read from The File Descriptor ¤
+The `ft_read_str` function reads from a file descriptor (fd) into a string (s) until it encounters a newline character ('\n') or reaches the end of the file
+
+1. **Memory Allocation**:
+   - `buff` is allocated memory to temporarily store data read from the file using `malloc((BUFFER_SIZE + 1) * sizeof(char))`. This ensures `buff` can hold up to `BUFFER_SIZE` characters plus a null terminator.
+
+   - If `s` (the string) is `NULL`, it's initialized with `malloc(1)` to create an empty string.
+
+2. **Reading Loop**:
+   - The function enters a loop that continues as long as there's no newline (`'\n'`) in `s` and `bytes` is not 0.
+   
+   - Inside the loop:
+     - `read(fd, buff, BUFFER_SIZE)` reads up to `BUFFER_SIZE` bytes from the file descriptor `fd` into `buff`. The number of bytes read is stored in `bytes`.
+     
+     - If `read` returns `-1`, indicating an error, the function frees `buff` and `s` before returning `NULL`.
+     
+     - `buff[bytes] = '\0'` ensures `buff` is null-terminated after reading.
+     
+     - `s = ft_free(s, buff)` calls a function  to concatenate `buff` into `s` and free `buff`. If `ft_free` fails (`s` becomes `NULL`), it frees `buff` and returns `NULL`.
+
+3. **Return**:
+   - Once the loop exits (due to finding `'\n'` in `s` or reaching end of file), the function frees `buff` and returns `s`, which contains the accumulated data read from the file.
