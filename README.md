@@ -51,6 +51,7 @@ However, if the `BUFFER_SIZE` is 100, a single call to the `read` function would
 
 ## ¤ Static Variables in C ¤
 Static variable can be used to maintain the state of reading lines across multiple function calls. This is commonly used in functions that read input until a newline character ('\n') is encountered or until a specified delimiter is found.
+
 ## ¤ A Function Read from The File Descriptor ¤
 The `ft_read_str` function reads from a file descriptor (fd) into a string (s) until it encounters a newline character ('\n') or reaches the end of the file
 
@@ -73,3 +74,48 @@ The `ft_read_str` function reads from a file descriptor (fd) into a string (s) u
 
 3. **Return**:
    - Once the loop exits (due to finding `'\n'` in `s` or reaching end of file), the function frees `buff` and returns `s`, which contains the accumulated data read from the file.
+
+## ¤ A Function to Get the Line to Return ¤
+
+The `ft_get_line` function extracts a single line from a given string `s`, terminating at either a newline character (`'\n'`) or the end of the string. Here's a detailed explanation of how it works:
+1. **Initialization and Input Check**:
+   - If `s[0]` is `'\0'` (empty string), the function returns `NULL` indicating no line to extract.
+
+2. **Finding the Line Length**:
+   - The function iterates through `s` to find the length of the line until it encounters `'\n'` or reaches the end of the string (`s[i] && s[i] != '\n'`).
+
+3. **Memory Allocation**:
+   - `line` is allocated memory to store the extracted line. The size allocated is `i + 2` to accommodate the characters of the line and ensure space for `'\n'` and `'\0'`.
+
+4. **Copying Characters**:
+   - The characters from `s` are copied to `line` within a loop (`while (s[++i] && s[i] != '\n')`), stopping either at `'\n'` or the end of `s`.
+
+5. **Handling `'\n'`**:
+   - If `'\n'` is found in `s`, it is copied to `line`, and the index `i` is incremented to move past it.
+
+6. **Null-Termination**:
+   - The extracted line `line` is null-terminated (`line[i] = '\0'`) to ensure it is a valid C string.
+
+7. **Return**:
+   - Finally, `line`, which now contains the extracted line including `'\n'`, is returned.
+
+## ¤ Function To Create A New String ¤ 
+The `ft_new_str` function appears to aim at creating a new string by removing everything before the first newline character (`'\n'`) from the input string `s`. Here's a detailed explanation of how it works:
+
+1. **Finding the '\n' Position**:
+   - The function begins by iterating through `s` to find the position of the first `'\n'` (`while (s[i] && s[i] != '\n') i++;`).
+
+2. **Handling End of String**:
+   - If no `'\n'` is found (`!s[i]`), indicating the end of the string, the function frees `s` (assuming it is dynamically allocated) and returns `NULL`.
+
+3. **Memory Allocation for new_str**:
+   - Memory is allocated for `new_str` to hold the characters after the first `'\n'`, calculated as `ft_strlen(s) - i + 1` (including space for the null terminator).
+
+4. **Copying Characters**:
+   - Characters from `s` after the `'\n'` are copied to `new_str` using a loop (`while (s[i]) new_str[j++] = s[i++];`).
+
+5. **Null-Termination**:
+   - `new_str` is null-terminated after copying all characters (`new_str[j] = '\0';`).
+
+6. **Freeing Original String**:
+   - Before returning `new_str`, the original string `s` is freed (`return (free(s), new_str);`), ensuring proper memory management.
